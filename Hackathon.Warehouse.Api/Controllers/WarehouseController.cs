@@ -1,5 +1,5 @@
 ﻿using Hackathon.Warehouse.Api.ApiExtensions;
-using Hackathon.Warehouse.Api.Contracts;
+using Hackathon.Warehouse.Api.Contracts.Warehouse;
 using Hackathon.Warehouse.Core.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,7 +85,5 @@ namespace Hackathon.Warehouse.Api.Controllers
 
             return Ok(result.Value.ToResponse());
         }
-
-
     }
 }

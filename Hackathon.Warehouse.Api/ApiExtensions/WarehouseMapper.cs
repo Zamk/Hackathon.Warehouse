@@ -1,4 +1,4 @@
-﻿using Hackathon.Warehouse.Api.Contracts;
+﻿using Hackathon.Warehouse.Api.Contracts.Warehouse;
 using Hackathon.Warehouse.Core.Models;
 
 namespace Hackathon.Warehouse.Api.ApiExtensions
