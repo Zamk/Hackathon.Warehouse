@@ -33,6 +33,20 @@ namespace Hackathon.Warehouse.Api.Controllers
         }
 
         [HttpPost]
+        [Route("storage")]
+        public async Task<ActionResult<WarehouseStorageResponse>> GetStorage([FromBody] GetWarehouseRequest request)
+        {
+            var result = await _warehouseService.GetStorage(request.Id);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
+
+        [HttpPost]
         [Route("create")]
         public async Task<ActionResult<WarehouseResponse>> Create([FromBody] CreateWarehouseRequest request)
         {

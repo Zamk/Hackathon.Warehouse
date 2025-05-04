@@ -108,5 +108,21 @@ namespace Hackathon.Warehouse.Application.Services
 
             return Result.Success<IEnumerable<StorageItem>>(warehouse.StorageItems);
         }
+
+        public async Task<Result<WarehouseStorageDto>> GetStorage(int warehouseId)
+        {
+            var warehouse = _warehouses.FirstOrDefault(w => w.Id == warehouseId);
+
+            if (warehouse is null)
+                return Result.Failure<WarehouseStorageDto> ($"Warehouse with id {warehouseId} not found");
+
+            var response = new WarehouseStorageDto
+            {
+                WarehouseId = warehouse.Id,
+                Items = warehouse.StorageItems
+            };
+
+            return Result.Success(response);
+        }
     }
 }
