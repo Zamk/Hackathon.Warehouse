@@ -9,6 +9,7 @@ namespace Hackathon.Warehouse.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton<IWarehouseService, WarehouseService>();
+            services.AddSingleton<IReceivingService, ReceivingService>();
 
             return services;
         }
