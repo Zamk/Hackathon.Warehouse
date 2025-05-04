@@ -32,5 +32,55 @@ namespace Hackathon.Warehouse.Application.Services
 
             return Result.Success(warehouse);
         }
+
+        public async Task<Result<WarehouseModel>> CreateZone(
+            int warehouseId, 
+            string name, 
+            int numberOfRows, 
+            int numberOfSections, 
+            int numberOfTires, 
+            double maxWidth, 
+            double maxHeight, 
+            double maxDepth
+            )
+        {
+            var warehouse = _warehouses.FirstOrDefault(w => w.Id == warehouseId);
+
+            if (warehouse is null)
+                return Result.Failure<WarehouseModel>($"Warehouse with id {warehouseId} not found");
+
+            var zone = new Zone
+            {
+                Id = Random.Shared.Next(),
+                Name = name,
+                NumberOfRows = numberOfRows,
+                NumberOfSections = numberOfSections,
+                NumberOfTires = numberOfTires,
+                MaxWidth = maxWidth,
+                MaxDepth = maxDepth,
+                MaxHeight = maxHeight
+            };
+
+            warehouse.Zones.Add(zone);
+
+            return Result.Success(warehouse);
+        }
+
+        public async Task<Result<WarehouseModel>> RemoveZone(int warehouseId, int zoneId)
+        {
+            var warehouse = _warehouses.FirstOrDefault(w => w.Id == warehouseId);
+
+            if (warehouse is null)
+                return Result.Failure<WarehouseModel>($"Warehouse with id {warehouseId} not found");
+
+            var zone = warehouse.Zones.FirstOrDefault(z => z.Id == zoneId);
+
+            if (zone is null)
+                return Result.Failure<WarehouseModel>($"Zone with id {zoneId} not found");
+
+            warehouse.Zones.Remove(zone);
+
+            return Result.Success(warehouse);
+        }
     }
 }

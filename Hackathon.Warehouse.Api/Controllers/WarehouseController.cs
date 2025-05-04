@@ -13,37 +13,79 @@ namespace Hackathon.Warehouse.Api.Controllers
 
         public WarehouseController(
             IWarehouseService warehouseService
-            ) 
+            )
         {
             _warehouseService = warehouseService;
         }
 
-        [HttpGet]
-        [Route("get/{id}")]
-        public async Task<ActionResult<WarehouseResponse>> GetId([FromRoute] long id)
+        [HttpPost]
+        [Route("get")]
+        public async Task<ActionResult<WarehouseResponse>> GetId([FromBody] GetWarehouseRequest request)
         {
-            var clientResult = await _warehouseService.GetById(id);
+            var result = await _warehouseService.GetById(request.Id);
 
-            if (clientResult.IsFailure)
+            if (result.IsFailure)
             {
-                return BadRequest(clientResult.Error);
+                return BadRequest(result.Error);
             }
 
-            return Ok(clientResult.Value.ToResponse());
+            return Ok(result.Value.ToResponse());
         }
 
         [HttpPost]
         [Route("create")]
         public async Task<ActionResult<WarehouseResponse>> Create([FromBody] CreateWarehouseRequest request)
         {
-            var categoryResult = await _warehouseService.Create(request.Name);
+            var result = await _warehouseService.Create(request.Name);
 
-            if (categoryResult.IsFailure)
+            if (result.IsFailure)
             {
-                return BadRequest(categoryResult.Error);
+                return BadRequest(result.Error);
             }
 
-            return Ok(categoryResult.Value.ToResponse());
+            return Ok(result.Value.ToResponse());
         }
+
+        [HttpPost]
+        [Route("zone/add")]
+        public async Task<ActionResult> AddZone([FromBody] AddZoneRequest request)
+        {
+            var result = await _warehouseService.CreateZone(
+                request.WarehouseId,
+                request.Name,
+                request.NumberOfRows,
+                request.NumberOfSections,
+                request.NumberOfTires,
+                request.MaxWidth,
+                request.MaxHeight,
+                request.MaxDepth
+                );
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
+
+        [HttpPost]
+        [Route("zone/remove")]
+        public async Task<ActionResult> RemoveZone([FromBody] RemoveZoneRequest request)
+        {
+            var result = await _warehouseService.RemoveZone(
+                request.WarehouseId,
+                request.ZoneId
+                );
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
+
+
     }
 }
