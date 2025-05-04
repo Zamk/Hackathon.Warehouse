@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Hackathon.Warehouse.Core.Abstractions.Services;
+using Hackathon.Warehouse.Core.Models;
 using Hackathon.Warehouse.Core.Models.Documents;
 
 namespace Hackathon.Warehouse.Application.Services
@@ -94,16 +95,31 @@ namespace Hackathon.Warehouse.Application.Services
             return Result.Success(document);
         }
 
-        public async Task<Result<ReceivingDocument>> ConfirmReceivingDocument(int id)
+        public async Task<Result<WarehouseStorageDto>> ConfirmReceivingDocument(int id)
         {
             var document = _receivingDocuments.FirstOrDefault(d => d.Id == id);
 
             if (document is null)
-                return Result.Failure<ReceivingDocument>($"ReceivingDocument with id {id} not found");
+                return Result.Failure<WarehouseStorageDto>($"ReceivingDocument with id {id} not found");
+
+            var storageItems = document.Items.Select(i => new StorageItem
+            {
+                Id = Random.Shared.Next(),
+                ProductId = i.ProductId,
+                ProductsCount = i.RecivedCount,
+            });
+
+            var itemsResult = await _warehouseService.PutItemsToWarehouse(document.Warehouse.Id, storageItems);
 
             document.Status = ReceivingDocumentStatus.Confirmed;
 
-            return Result.Success(document);
+            var response = new WarehouseStorageDto
+            {
+                WarehouseId = id,
+                Items = itemsResult.Value
+            };
+
+            return Result.Success(response);
         }
 
         public async Task<Result<ReceivingDocument>> RejectReceivingDocument(int id)

@@ -82,5 +82,31 @@ namespace Hackathon.Warehouse.Application.Services
 
             return Result.Success(warehouse);
         }
+
+        public async Task<Result<IEnumerable<StorageItem>>> PutItemsToWarehouse(int warehouseId, IEnumerable<StorageItem> storageItems)
+        {
+            var warehouse = _warehouses.FirstOrDefault(w => w.Id == warehouseId);
+
+            if (warehouse is null)
+                return Result.Failure<IEnumerable<StorageItem>>($"Warehouse with id {warehouseId} not found");
+
+            foreach (var item in storageItems)
+            {
+                // var product = _productService.GetProductById(item.ProductId);
+                // Идея была в том, что бы получать свободное место на складе с учетом габаритов товара
+                // Пока сделал просто получение первого свободного места
+
+                var position = warehouse.FindAppropriateEmptyPlace();
+
+                if (position is null)
+                    continue;
+                
+                item.Position = position;
+
+                warehouse.StorageItems.Add(item);
+            }
+
+            return Result.Success<IEnumerable<StorageItem>>(warehouse.StorageItems);
+        }
     }
 }

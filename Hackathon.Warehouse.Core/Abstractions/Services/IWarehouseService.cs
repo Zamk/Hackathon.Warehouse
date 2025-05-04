@@ -19,5 +19,9 @@ namespace Hackathon.Warehouse.Core.Abstractions.Services
             );
 
         Task<Result<WarehouseModel>> RemoveZone(int warehouseId, int zoneId);
+
+        Task<Result<IEnumerable<StorageItem>>> PutItemsToWarehouse(int warehouseId, IEnumerable<StorageItem> storageItems);
+
+
     }
 }

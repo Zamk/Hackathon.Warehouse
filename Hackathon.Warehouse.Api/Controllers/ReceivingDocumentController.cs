@@ -66,5 +66,62 @@ namespace Hackathon.Warehouse.Api.Controllers
 
             return Ok(result.Value.ToResponse());
         }
+
+        [HttpPost]
+        [Route("{id}/queuee")]
+        public async Task <ActionResult> QueueeDocument([FromRoute] int id)
+        {
+            var result = await _receivingService.QueueeReceivingDocument(id);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
+
+        [HttpPost]
+        [Route("{id}/confirm")]
+        public async Task<ActionResult> ConfirmDocument([FromRoute] int id)
+        {
+            var result = await _receivingService.ConfirmReceivingDocument(id);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
+
+
+        [HttpPost]
+        [Route("{id}/reject")]
+        public async Task<ActionResult> RejectDocument([FromRoute] int id)
+        {
+            var result = await _receivingService.RejectReceivingDocument(id);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
+
+        [HttpPost]
+        [Route("{id}/confirmReceivingItem")]
+        public async Task<ActionResult> RejectDocument([FromRoute] int id, [FromBody] ReceiveItemRequest request)
+        {
+            var result = await _receivingService.ConfirmReceivingItem(id, request.ItemId, request.ReceivedCount);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value.ToResponse());
+        }
     }
 }

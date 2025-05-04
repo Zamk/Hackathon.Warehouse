@@ -14,5 +14,21 @@ namespace Hackathon.Warehouse.Api.ApiExtensions
         {
             return new WarehouseResponse(warehouse.Id, warehouse.Name, warehouse.Zones.Select(z => z.ToResponse()));
         }
+
+        public static StorageItemResponse ToResponse(this StorageItem storageItem)
+        {
+            return new StorageItemResponse(
+                storageItem.Id,
+                storageItem.Description,
+                storageItem.ProductId,
+                storageItem.Position,
+                storageItem.ProductsCount
+                );
+        }
+
+        public static WarehouseStorageResponse ToResponse(this WarehouseStorageDto storageDto)
+        {
+            return new WarehouseStorageResponse(storageDto.WarehouseId, storageDto.Items.Select(i => i.ToResponse()));
+        }
     }
 }
